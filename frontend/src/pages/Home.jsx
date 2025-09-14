@@ -15,9 +15,12 @@ const Home = () => {
             alert("Enter guest Name first!!!");
             return ;
         }
+        localStorage.setItem('userGuestName', userGuestName);
         navigate('/dashboard')
 
     }
+
+
     return (
         <>
             <Header />

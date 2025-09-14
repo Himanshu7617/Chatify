@@ -9,6 +9,9 @@ export const socket = io(BASE_URL, {
     autoConnect : false,
 })
 
+export const chatSpecificSocket = io(BASE_URL + "/chat-specific", {
+    autoConnect: false,
+});
 
 export const chatRandomSocket = io(BASE_URL + "/chat-random" , {
     autoConnect: false,

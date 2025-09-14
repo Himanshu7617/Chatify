@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "imports": {
+    "@/": "./backend/scr/"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -13,6 +16,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "module-alias": "^2.2.3",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0"
   }
