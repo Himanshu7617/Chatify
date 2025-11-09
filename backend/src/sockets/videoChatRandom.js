@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
+//import { createWorker, router } from "../config/mediasoupConfig.js";
 
+
+//normal webrtc implementaton - not working as expected
 export default function registerVideoChatRandomSocket(io) {
   const videoChatRandom = io.of("/video-chat-random");
 
@@ -16,11 +19,9 @@ export default function registerVideoChatRandomSocket(io) {
     next();
   });
   videoChatRandom.use((socket, next) => {
-    const userID = allVideoChatRandomSockets.filter((s) => {
-      return s.userID === socket.handshake.auth.userID;
-    });
+    const userID = socket.handshake.auth.userID;
 
-    if (userID.length > 0) {
+    if (userID && userID.length > 0) {
       socket.userID = userID[0];
       return next();
     }
@@ -55,8 +56,6 @@ export default function registerVideoChatRandomSocket(io) {
   });
 
   videoChatRandom.on("connection", (socket) => {
-    console.log("vidoelength : ", allVideoChatRandomSockets);
-
     videoChatRandom.emit("video-chat-random-total-connection", {
       totalConnectionCount: allVideoChatRandomSockets.filter(
         (s) => s.connected === false
@@ -71,8 +70,8 @@ export default function registerVideoChatRandomSocket(io) {
       allVideoChatRandomSockets.splice(index, 1);
 
       //new total connections
-      chatRandom.emit("video-chat-random-total-connection", {
-        totalConnectionCount: allChatRandomSockets.filter(
+      videoChatRandom.emit("video-chat-random-total-connection", {
+        totalConnectionCount: allVideoChatRandomSockets.filter(
           (s) => s.connected === false
         ).length,
       });
@@ -173,16 +172,25 @@ export default function registerVideoChatRandomSocket(io) {
     socket.emit("video-chat-random-user-id", {
       userID: socket.userID,
     });
-    socket.on("video-chat-random-offer", (offer) => {
-      socket.broadcast.emit("video-chat-random-offer", offer);
+    socket.on("video-chat-random-offer", ({ offer, partnerID }) => {
+      socket.to(partnerID).emit("video-chat-random-offer", {
+        offer,
+        partnerID: socket.userID,
+      });
     });
 
-    socket.on("video-chat-random-answer", (answer) => {
-      socket.broadcast.emit("video-chat-random-answer", answer);
+    socket.on("video-chat-random-answer", ({ answer, partnerID }) => {
+      socket.to(partnerID).emit("video-chat-random-answer", {
+        answer,
+        partnerID: socket.userID,
+      });
     });
 
-    socket.on("video-chat-random-ice-candidate", (candidate) => {
-      socket.broadcast.emit("video-chat-random-ice-candidate", candidate);
+    socket.on("video-chat-random-ice-candidate", ({ candidate, partnerID }) => {
+      socket.to(partnerID).emit("video-chat-random-ice-candidate", {
+        candidate,
+        partnerID: socket.userID,
+      });
     });
 
     socket.on("video-chat-random-connect-to-another", ({ partnerID }) => {

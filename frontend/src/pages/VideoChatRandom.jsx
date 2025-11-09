@@ -27,7 +27,7 @@ const VideoChatRandom = () => {
             //get webcam 
             const localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
             if(localVideoRef && localVideoRef.current) { 
-                localVideoRef.current.src = localStream;
+               // localVideoRef.current.src = localStream;
                 localVideoRef.current.srcObject = localStream;
 
                 localStreamRef.current = localStream;
@@ -44,26 +44,27 @@ const VideoChatRandom = () => {
                 peer.addTrack(track, localStream);
             })
 
-            
+           
             //when gathering ice candidates 
             peer.onicecandidate = ({candidate}) => { 
                 if(candidate) {
-                    videoChatRandomSocket.emit('video-chat-random-ice-candidate', candidate)
+                    videoChatRandomSocket.emit('video-chat-random-ice-candidate', { candidate, partnerID: localStorage.getItem('videoChatRandomPartnerID') })
                 }
             }
 
-            //when receiving track from remote
+             //when receiving track from remote
             peer.ontrack = (event) => { 
                 console.log(event.streams);
                 remoteVideoRef.current.srcObject = event.streams[0];
                 remoteVideoRef.current.src = event.streams[0];
             }
+            
             //listen for incoming offer 
-            videoChatRandomSocket.on('video-chat-random-offer', async (offer) => { 
+            videoChatRandomSocket.on('video-chat-random-offer', async ({offer, partnerID}) => { 
                 await peer.setRemoteDescription(new RTCSessionDescription(offer));
                 const answer = await peer.createAnswer();
                 await peer.setLocalDescription(answer);
-                videoChatRandomSocket.emit('video-chat-random-answer', answer);
+                videoChatRandomSocket.emit('video-chat-random-answer', {    answer, partnerID });
             });
 
             //listen for answer to our offer
@@ -86,7 +87,7 @@ const VideoChatRandom = () => {
             //create and send offer (start the call)
             const offer = await peer.createOffer();
             await peer.setLocalDescription(offer);
-            videoChatRandomSocket.emit('video-chat-random-offer', offer);
+            videoChatRandomSocket.emit('video-chat-random-offer', { offer, partnerID: localStorage.getItem('videoChatRandomPartnerID') });
         }
 
 
