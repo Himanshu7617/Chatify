@@ -11,10 +11,9 @@ const GlobalContext = ( {children} ) => {
   const [userGuestName, setUserGuestName] = useState('');
   const [chatRandomUserID, setChatRandomUserID] = useState('');
   const [chatMultipleUserID, setChatMultipleUserID] = useState('');
-  const [videoChatRandomUserID, setVideoChatRandomUserID] = useState('');
   const [chatMultipleAllRooms, setChatMultipleAllRooms] = useState([]);
 
-  const contextValues = {theme, setTheme, chatRandomUserID, setChatRandomUserID,chatMultipleAllRooms,setChatMultipleAllRooms, userGuestName, setUserGuestName, chatMultipleUserID, setChatMultipleUserID, videoChatRandomUserID, setVideoChatRandomUserID}
+  const contextValues = {theme, setTheme, chatRandomUserID, setChatRandomUserID,chatMultipleAllRooms,setChatMultipleAllRooms, userGuestName, setUserGuestName, chatMultipleUserID, setChatMultipleUserID, }
   return (
     <globalContext.Provider value={ contextValues}>
       {children}

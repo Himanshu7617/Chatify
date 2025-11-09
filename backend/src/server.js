@@ -3,7 +3,6 @@ import { createServer } from "node:http";
 import { Server } from "socket.io";
 import registerChatRandomSocket from "./sockets/chatRandom.js";
 import registerChatMultipleSocket from "./sockets/chatMultiple.js";
-import registerVideoChatRandomSocket from "./sockets/videoChatRandom.js";
 import registerChatSpecificSocket from "./sockets/chatSpecific.js";
 
 const app = express();
@@ -19,7 +18,6 @@ const io = new Server(server, {
 
 registerChatRandomSocket(io);
 registerChatMultipleSocket(io);;
-registerVideoChatRandomSocket(io);
 registerChatSpecificSocket(io);
 
 

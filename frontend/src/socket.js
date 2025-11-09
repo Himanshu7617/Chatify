@@ -20,7 +20,3 @@ export const chatRandomSocket = io(BASE_URL + "/chat-random" , {
 export const chatMultipleSocket = io(BASE_URL + "/chat-multiple", { 
     autoConnect: false,
 })
-
-export const videoChatRandomSocket = io(BASE_URL + "/video-chat-random", { 
-    autoConnect : false,
-})

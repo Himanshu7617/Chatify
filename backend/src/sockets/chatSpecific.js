@@ -17,7 +17,7 @@ export default function registerChatSpecificSocket(io) {
       const index = allChatSpecificSockets.findIndex(
         (s) => s.userID === socket.userID
       );
-      if( index !== -1 && allChatSpecificSockets[index].connected && allChatSpecificSockets[index].partnerID.length > 0) {
+      if( index !== -1 && allChatSpecificSockets[index].connected && allChatSpecificSockets[index].partnerID.length() > 0) {
         socket.to(allChatSpecificSockets[index].partnerID).emit("chatSpecific-partner-disconnected", { message: "Your chat partner has disconnected." }); 
         allChatSpecificSockets.splice(index, 1);
       }
