@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://chatify-bh07.onrender.com';
 
 
 export const socket = io(BASE_URL, {

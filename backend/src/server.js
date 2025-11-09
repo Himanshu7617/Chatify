@@ -11,7 +11,7 @@ const server = createServer(app); // needed to create http server for socket.io
 // setting up socket server
 
 const io = new Server(server, {
-    cors : "http://localhost:5173", 
+    cors : "https://chatify-pi-red.vercel.app/", 
 });
 
 //registering to respective namespaces 
