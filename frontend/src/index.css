@@ -3,3 +3,8 @@
 *{
   box-sizing: border-box;
 }
+@layer utilities {
+  .font-pixel {
+    font-family: 'Pixelify Sans', system-ui, sans-serif;
+  }
+}
