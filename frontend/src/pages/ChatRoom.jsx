@@ -5,7 +5,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
 import { chatMultipleSocket } from '../socket';
 import { globalContext } from '../context/GlobalContext';
-
+import BrickBG from '../assets/brickBackground.svg';
 
 
 const ChatRoom = () => {
@@ -102,6 +102,7 @@ const ChatRoom = () => {
       roomID : roomID,
       message : message, 
       sender : userGuestName, 
+      
     }
 
     chatMultipleSocket.emit('chat-mutiple-new-message',newMessage);
@@ -110,47 +111,35 @@ const ChatRoom = () => {
   }
 
   return (
-    <div className='h-screen w-full  flex flex-col'>
-      <Header />
-      <div className='h-[90vh] w-full relative flex'>
-        <span onClick={() => {setNavActive(!navActive)}}  className=' lg:hidden h-fit z-10  text-xl md:text-2xl p-4 w-fit absolute left-0 top-0 border-2 border-pink-400'>
-          { navActive ? <ImCross /> : <GiHamburgerMenu />}
-
-        </span>
-        {
-          navActive && <div className='h-[90vh] absolute z-[6] bg-blue-300 py-14 w-full flex flex-col gap-2'>
-            <p className='self-center text-2xl underline' >Members</p>
-            <ol type='1' className='h-fit  px-6 list-decimal w-full '>
-            {allMembers.map((member) => (
-              <li key={member.memberID} className='text-xl m-2'>{member.memberName}</li>
-            ))}
-          </ol>
-
-          </div>
-        }
+    <div className='h-screen w-full font-pixel overflow-hidden flex flex-col'>
+    <img src={BrickBG} className='h-full fixed  w-full object-cover z-[-1000]' />
+      
+     
+      <div className='h-[100vh] w-full z-[100] relative flex'>
+       
 
 
-        <div className='h-[90vh] hidden lg:block border-black border-r-2 w-1/5'>
-          <p className='h-fit w-full bg-blue-500 p-4 mb-2'>Members: </p>
+        <div className='h-full overflow-auto  lg:block border-[#6d350f]  bg-[#D38D5F]  border-8 w-1/5'>
+          <p className='h-fit w-full bg-[#D38D5F] p-4 mb-2'>Members: </p>
           <ol type='1' className='h-fit  px-6 list-decimal w-full '>
             {allMembers.map((member) => (
-              <li key={member.memberID} className='text-xl m-2'>{member.memberName}</li>
+              <li key={member.memberID} className='text-xl z-40 m-2'>{member.memberName}</li>
             ))}
           </ol>
 
         </div>
-        <div className='h-[90vh] w-full lg:w-4/5'>
+        <div className='h-full w-full lg:w-4/5'>
 
-          <div ref={messageContainerRef} className=' relative overflow-y-scroll h-[80vh]'>
-            <div className='h-fit w-full bg-blue-300 p-4 flex justify-center items-center'>Room Name : {roomName}</div>
+          <div ref={messageContainerRef} className=' relative overflow-y-scroll h-[90vh]'>
+            <div className='h-fit w-full border-[#6d350f]  bg-[#D38D5F]  border-8 p-4 flex justify-center items-center'>Room Name : {roomName}</div>
             <ul>
 
               {allMessages.map((msg, idx) => (
                 <li
                   key={idx}
-                  className={`h-fit w-fit md:text-xl lg:text-2xl rounded md:rounded-lg  m-2 `}
+                  className={`h-fit w-fit md:text-xl text-[#1b55b1] lg:text-2xl rounded md:rounded-lg  m-2 `}
                 >
-                  <fieldset className='border-2 border-gray-700 rounded-sm md:rounded-lg p-4'> 
+                  <fieldset className='border-4 border-[#1b55b1] bg-[#b1bbf2]  rounded-sm md:rounded-lg p-4'> 
                   <legend>{msg.sender}</legend>
                   {msg.message}
                   </fieldset>
@@ -161,8 +150,8 @@ const ChatRoom = () => {
           </div>
           <div className=' h-[10vh] flex  w-full'>
 
-            <input ref={inputBoxRef} type="text" value={message} onChange={handleInputChange} placeholder='Enter the message' className='outline-none border-black border-2  md:text-xl lg:text-2xl px-4 flex-1' />
-            <button onClick={handleSendMessage} className='w-fit h-full bg-black cursor-pointer text-white px-4 md:text-xl lg:text-2xl hover:text-blue-300 '>send</button>
+            <input ref={inputBoxRef} type="text" value={message} onChange={handleInputChange} placeholder='Enter the message' className='outline-none border-[#6d350f]  bg-[#D38D5F] border-8  md:text-xl lg:text-2xl px-4 flex-1' />
+            <button onClick={handleSendMessage} className='w-fit h-full   bg-[#D38D5F] border-[#6d350f]   border-8 cursor-pointer text-[#6d350f] hover:bg-[#6d350f] px-4 md:text-xl lg:text-2xl hover:text-white'>send</button>
           </div>
 
 

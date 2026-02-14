@@ -271,11 +271,12 @@ const ChatRandom = () => {
 
             {/* Page Content */}
 
-            <div className='h-fit w-full z-10'>
+            <div className='h-fit font-pixel w-full z-10'>
 
                 {
                     (partnerID.length <= 0) ?
-                        <div className='z-10 w-full h-fit flex justify-center items-center md:text-xl lg:text-2xl p-12'>{isParnterDisconnected ? `Your partner has left the chat please try connecting to another ` : ` Sorry we can't connect right now, because nobody is online, Refresh after sometime to check again`} </div> :
+
+                        <div className='z-10 w-full m-7     h-fit flex justify-center items-center '><p className='border-[#1b55b1]  p-4 border-4   text-[#1b55b1] rounded-2xl text-2xl bg-[#b1bbf2]'>{isParnterDisconnected ? `Your partner has left the chat please try connecting to another ` : ` Sorry we can't connect right now, because nobody is online, Refresh after sometime to check again`} </p></div> :
                         <div className='z-10 w-full h-[100vh]   flex flex-col'>
                             <div className='border-b-4 border-[#784421] w-full h-fit p-4 flex justify-center bg-[#D38D5F] font-pixel items-center text-[1rem] md:text-xl lg:text-2xl '>
                                 {isChatConnected ? `Finally! you are connected to ${partnerUserName}. Say Hi!!!` : `Please wait we are connecting you to a random person... `}

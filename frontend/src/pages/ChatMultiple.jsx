@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { chatMultipleSocket } from '../socket';
 import { globalContext } from '../context/GlobalContext';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import BrickBG from '../assets/brickBackground.svg';
 
 const ChatMultiple = () => {
 
@@ -103,16 +104,18 @@ const ChatMultiple = () => {
 
   return (
 
-    <>
+    <div className='h-full font-pixel w-full overflow-hidden'>
+            <img src={BrickBG} className='h-full fixed  w-full object-cover z-[-1000]' />
+      
       <Header />
-      <div className=' h-fit min-h-[90vh] w-full p-4  '>
+      <div className=' h-fit min-h-[90vh] flex flex-col items-center w-full p-4  '>
 
-        <div className='h-fit min-h-[10vh] w-full border-2 border-black flex flex-col gap-2 p-2 justify-center items-center rounded-sm md:rounded-lg '>
-          <input value={roomName} onChange={(e) => { setRoomName(e.target.value) }} className='p-2 border-1 border-black rounded-sm md:rounded-lg' placeholder='room name' type="text" />
-          <button onClick={handleNewRoomCreateEvent} className='h-fit w-fit p-2 px-8 text-white bg-black rounded-sm md:rounded-lg hover:text-blue-400 hover:border-2 hover:border-blue-400 cursor-pointer'>Create Your Own Room</button>
+        <div className='h-fit min-h-[10vh] w-full border-8 p-16  border-[#6d350f]  bg-[#D38D5F]  flex flex-col gap-2 p-2 justify-center items-center rounded-sm md:rounded-lg '>
+          <input value={roomName} onChange={(e) => { setRoomName(e.target.value) }} className='p-2 border-b-2 border-[#6d350f] focus:outline-none ' placeholder='room name' type="text" />
+          <button onClick={handleNewRoomCreateEvent} className='h-fit w-fit p-2 px-8 text-[#6d350f] bg-[#f1b58d] hover:bg-[#6d350f] rounded-sm md:rounded-lg hover:text-white cursor-pointer'>Create Your Own Room</button>
         </div>
 
-        <div className='h-fit w-full flex flex-col justify-center items-center p-4'>
+        <div className='h-fit border-8 border-[#6d350f] mt-4 mb-16 rounded-2xl bg-[#D38D5F]  w-fit flex flex-col justify-center items-center p-4'>
           <p>OR</p>
           <p className='font-bold'>Join a room</p>
         </div>
@@ -121,14 +124,14 @@ const ChatMultiple = () => {
 
           {
             chatMultipleAllRooms.map((room) => { 
-              return <div key={room.roomID} onClick={() => {handleJoinRoomEvent(room.roomID, room.roomName)}} className='h-fit w-fit p-16 bg-blue-400 cursor-pointer rounded-sm md:rounded-lg'> {room.roomName}</div>
+              return <div key={room.roomID} onClick={() => {handleJoinRoomEvent(room.roomID, room.roomName)}} className='h-fit w-fit p-16 border-[#6d350f]  bg-[#D38D5F] hover:bg-[#6d350f] hover:text-white z-[1000] border-8 cursor-pointer rounded-sm md:rounded-lg'> {room.roomName}</div>
             })
           }
 
         </div>
 
       </div>
-    </>
+    </div>
   )
 }
 

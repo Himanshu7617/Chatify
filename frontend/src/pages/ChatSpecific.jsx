@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { z } from 'zod';
 import { chatSpecificSocket } from '../socket';
+import BrickBG from '../assets/brickBackground.svg';
+import { IoCopyOutline } from "react-icons/io5";
 
 
 const ChatSpecific = () => {
@@ -10,7 +12,7 @@ const ChatSpecific = () => {
 
 
   const [userId, setUserId] = useState('');
-  const [partnerID, setPartnerID] = useState(() => { 
+  const [partnerID, setPartnerID] = useState(() => {
     return localStorage.getItem('chatSpecificPartnerID') || '';
   });
   const [partnerGuestName, setPartnerGuestName] = useState(() => {
@@ -26,8 +28,10 @@ const ChatSpecific = () => {
   const [allMessages, setAllMessages] = useState([])
   const [istyping, setIsTyping] = useState(false);
   const [message, setMessage] = useState('');
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  
+
+
 
   const [errors, setErrors] = useState()
 
@@ -57,7 +61,7 @@ const ChatSpecific = () => {
 
     }
 
-    
+
     console.log('emitting connect to partner event');
 
     chatSpecificSocket.emit('chatSpecific-connect-to-partner', { partnerID: partnerID });
@@ -102,7 +106,7 @@ const ChatSpecific = () => {
       message: message
     }
     const partnerID = localStorage.getItem('chatSpecificPartnerID');
-     
+
     chatSpecificSocket.emit('chatSpecific-new-message', { partnerID: partnerID, message: message });
     setAllMessages(prev => [...prev, newMessage])
 
@@ -128,7 +132,7 @@ const ChatSpecific = () => {
 
   useEffect(() => {
 
-    
+
 
 
 
@@ -220,46 +224,64 @@ const ChatSpecific = () => {
   }, []);
 
 
+  function copyToClipboardHandler() {
+    // const userID = userId;
+    navigator.clipboard.writeText(userId);
+    setShowTooltip(true);
 
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 1500);
+  }
 
   return (
-    <div>
-      <Header />
+    <div className='h-[100vh] w-[100vw] flex flex-col justify-center items-center overflow-hidden'>
+      <img src={BrickBG} className='h-full absolute w-full object-cover z-[-1000]' />
+
 
       {
         (!isChatConnected) ?
-          <main className='w-full h-[90vh] flex flex-col gap-4 justify-center items-center'>
+          <main className='w-fit h-fit p-16 font-pixel border-[#6d350f] bg-[#f1b58d] rounded-2xl  border-8 flex flex-col gap-4 justify-center items-center'>
+      <div className='absolute top-0'>
 
-            <div className='w-fit h-fit p-4 border-4 rounded md:rounded-sm lg:rounded-lg'>
+      <Header  />
+      </div>
+
+            <div className='w-fit h-fit flex gap-4 items-center p-4 border-8 px-8 font-pixel border-[#6d350f] bg-[#D38D5F] rounded md:rounded-sm lg:rounded-lg'>
               Your ID :{userId}
-
+              {showTooltip && (
+                <div className="absoluten right-[-100px] z-[1000] px-3 py-2 text-sm font-medium text-white bg-black rounded shadow">
+                  Copied!
+                </div>
+              )}
+              <span className='cursor-pointer ' onClick={copyToClipboardHandler}><IoCopyOutline /></span>
             </div>
             <p className='text-center'>OR<br />Fill the details below to chat</p>
-            <form onSubmit={handleFormSubmit} className='w-fit h-fit p-4 rounded md:rounded-sm lg:rounded-lg border-4 flex flex-col justify-center gap-2 items-center'>
+            <form onSubmit={handleFormSubmit} className='w-fit h-fit p-4 rounded md:rounded-sm lg:rounded-lg border-8 border-[#6d350f] bg-[#D38D5F] font-pixel flex flex-col justify-center gap-2 items-center'>
 
 
               <div className=' flex gap-2'>
                 <label htmlFor="partnerId">PartnerID: </label>
-                <input className='px-2' name='partnerId' type="text" value={partnerID} onChange={(e) => { setPartnerID(e.target.value) }} placeholder=' tkuKs2BrQKgbOv5oAABN' />
+                <input className='px-2 outline-none focus:outline-none focus:border-none border-none' name='partnerId' type="text" value={partnerID} onChange={(e) => { setPartnerID(e.target.value) }} placeholder=' tkuKs2BrQKgbOv5oAABN' />
                 {(errors) && (
                   <span className='text-red-600'>{errors.partnerID?._errors[0]}</span>
                 )}
               </div>
-              <button type='submit' className='w-full bg-black rounded md:rounded-sm lg:rounded-lg text-white p-1 hover:text-blue-400 cursor-pointer'> Chat Now</button>
+              <button type='submit' className='w-full hover:bg-[#58331a]  bg-[#fabc92] rounded md:rounded-sm lg:rounded-lg text-[#452810] p-1 hover:text-white cursor-pointer'> Chat Now</button>
             </form>
 
           </main> :
-          <div className='w-full h-[90vh]  flex flex-col'>
-            <div className='border-2 w-full h-fit p-4 flex justify-center bg-green-300 items-center text-[1rem] md:text-xl lg:text-2xl '>
+          <div className='w-full h-[100vh] overflow-hidden flex flex-col'>
+            <div className='border-2 w-full h-fit p-4 flex justify-center border-[#6d350f] bg-[#f1b58d]  items-center text-[1rem] md:text-xl lg:text-2xl '>
               {isChatConnected ? `Finally! you are connected to ${partnerGuestName}. Say Hi!!!` : `Please wait we are connecting you to ${partnerGuestName}... `}
             </div>
-            <div ref={messageContainerRef} className='border-2 relative overflow-y-scroll border-red-600 h-[72vh]'>
+            <div ref={messageContainerRef} className='border-2 relative overflow-y-scroll h-[90vh]'>
               <ul>
 
                 {allMessages.map((msg, idx) => (
                   <li
                     key={idx}
-                    className={`h-fit w-fit bg-${msg.recipient === 'partner' ? 'blue-300' : 'green-300'} p-4 md:text-xl lg:text-2xl rounded md:rounded-lg  m-2 `}
+                    className={`h-fit w-fit bg-${msg.recipient === 'partner' ? ' border-[#1b55b1] text-[#053b92] bg-[#b1bbf2]' : ' border-[#1bb152] bg-[#7df09f] text-[#0c8137]'} border-4 p-4 md:text-xl lg:text-2xl rounded md:rounded-lg  m-2 `}
                   >
                     {msg.message}
                   </li>
@@ -267,9 +289,9 @@ const ChatSpecific = () => {
               </ul>
               {istyping && <p className='absolute bottom-1 left-1 text-gray-500'>typing...</p>}
             </div>
-            <div className='border-blue-600 border-2 h-[9vh] flex  w-full'>
-              <input ref={inputBoxRef} type="text" value={message} onChange={handleNewMessageInputChange} placeholder='Enter the message' className='border-pink-500 border-2 md:text-xl lg:text-2xl px-4 flex-1' />
-              <button onClick={handleSendMessage} className='w-fit h-full bg-black cursor-pointer text-white px-4 md:text-xl lg:text-2xl hover:text-blue-300 '>send</button>
+            <div className='border-4 border-[#6d350f] h-[10vh] flex  w-full'>
+              <input ref={inputBoxRef} type="text" value={message} onChange={handleNewMessageInputChange} placeholder='Enter the message' className='border-[#6d350f] bg-[#f1b58d]   md:text-xl lg:text-2xl px-4 flex-1' />
+              <button onClick={handleSendMessage} className='w-fit h-full hover:bg-[#6d350f] border-[#6d350f] bg-[#f1b58d]  cursor-pointer text-white px-4 md:text-xl lg:text-2xl hover:text-blue-300 '>send</button>
             </div>
 
           </div>
