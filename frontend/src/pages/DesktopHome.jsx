@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { globalContext } from '../context/GlobalContext'
 import Header from '../components/Header';
 import homeScenery from '../assets/homeSceneryWithoutBranches.png';
@@ -20,15 +20,29 @@ import rock from '../assets/rock.png';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { Bouncy } from 'ldrs/react'
+import 'ldrs/react/Bouncy.css'
+
+
+
 
 gsap.registerPlugin(useGSAP);
+
 
 const DesktopHome = () => {
 
 
-    const { userGuestName, setUserGuestName } = useContext(globalContext);
+    const { userGuestName, setUserGuestName, TOTAL_IMAGES_FOR_HOME_PAGE } = useContext(globalContext);
     const navigate = useNavigate();
-    
+    const [loadedCount, setLoadedCount] = useState(0);
+
+    const allLoaded = loadedCount === TOTAL_IMAGES_FOR_HOME_PAGE;
+
+    function onImageLoadEvent() {
+        console.log("loadedCount : ", loadedCount);
+        setLoadedCount(prev => prev + 1);
+
+    }
 
     function handleChatNowEvent(e) {
         e.preventDefault();
@@ -41,9 +55,13 @@ const DesktopHome = () => {
 
     }
 
-  
+
 
     useGSAP(() => {
+
+        if (!allLoaded) return;
+
+
         gsap.fromTo(
             '.branch-1',
             {
@@ -184,71 +202,115 @@ const DesktopHome = () => {
                 ease: 'sine.inOut',
             }
         );
-    });
+    }, [allLoaded]);
+
+
+
+    //image loader handling
+    useEffect(() => {
+        const images = [
+            homeScenery,
+            homeSceneryBG,
+            Branch1, Branch2, Branch3,
+            Branch4, Branch5, Branch6,
+            Branch7, Branch8, Branch9,
+            Branch10, Branch11,
+            BigBoard,
+            SmallBoard,
+            rock
+        ];
+
+        let loaded = 0;
+
+        images.forEach(src => {
+            const img = new Image();
+            img.src = src;
+
+            img.onload = () => {
+                loaded++;
+
+                if (loaded === images.length) {
+                    setLoadedCount(images.length);
+                }
+            };
+        });
+
+    }, []);
 
     return (
-        <div className='h-[100vh] w-full flex relative    justify-center items-center overflow-hidden overflow-y-hidden'>
-            {/**Branches */}
-            <div className='h-[100vh] pointer-events-none  w-fit relative flex  justify-center '>
-                <div className='h-[50%] w-full flex absolute z-50 '>
-                    <span className='h-full w-fit branch-1 absolute  right-34 top-[-2.5rem]  '>
+        <div className='h-[100vh] w-full '>
 
-                        <img src={Branch1} className="object-cover h-[55vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-2 absolute right-18 top-[-2.5rem]'>
-                        <img src={Branch2} className="object-cover h-[70vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-3 absolute right-28 top-[-2.5rem]'>
-                        <img src={Branch3} className="object-cover h-[55vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-4 absolute right-56 top-[-2.5rem]'>
-                        <img src={Branch4} className="object-cover h-[40vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-5 absolute right-[25%] '>
-                        <img src={Branch5} className="object-cover h-[30vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-6 absolute  right-[40%]'>
-                        <img src={Branch6} className="object-cover h-[30vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-7 absolute left-[1rem] top-[-2.5rem]'>
-                        <img src={Branch7} className="object-cover h-[60vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-8 absolute left-4 top-[-2.5rem]'>
-                        <img src={Branch8} className="object-cover h-[65vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-9 absolute left-40 top-[-2.5rem]'>
-                        <img src={Branch9} className="object-cover h-[40vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-10 left-[20%] absolute '>
-                        <img src={Branch10} className="object-cover h-[28vh]" alt="" />
-                    </span>
-                    <span className='h-full w-fit branch-11 left-[30%] absolute '>
-                        <img src={Branch11} className="object-cover h-[10vh]" alt="" />
-                    </span>
+            {!allLoaded && <div className='h-full w-full  bg-[#f1b58d] flex justify-center items-center z-[99999]'>
+                <Bouncy
+                    size="45"
+                    speed="1.75"
+                    color="brown"
+                />
+            </div>
+            }
 
+            <div className='h-[100vh] w-full flex relative    justify-center items-center overflow-hidden overflow-y-hidden'>
+                {/**Branches */}
+                <div className='h-[100vh] pointer-events-none  w-fit relative flex  justify-center '>
+                    <div className='h-[50%] w-full flex absolute z-50 '>
+                        <span className='h-full w-fit branch-1 absolute  right-34 top-[-2.5rem]  '>
+
+                            <img src={Branch1} className="object-cover h-[55vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-2 absolute right-18 top-[-2.5rem]'>
+                            <img src={Branch2} className="object-cover h-[70vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-3 absolute right-28 top-[-2.5rem]'>
+                            <img src={Branch3} className="object-cover h-[55vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-4 absolute right-56 top-[-2.5rem]'>
+                            <img src={Branch4} className="object-cover h-[40vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-5 absolute right-[25%] '>
+                            <img src={Branch5} className="object-cover h-[30vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-6 absolute  right-[40%]'>
+                            <img src={Branch6} className="object-cover h-[30vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-7 absolute left-[1rem] top-[-2.5rem]'>
+                            <img src={Branch7} className="object-cover h-[60vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-8 absolute left-4 top-[-2.5rem]'>
+                            <img src={Branch8} className="object-cover h-[65vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-9 absolute left-40 top-[-2.5rem]'>
+                            <img src={Branch9} className="object-cover h-[40vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-10 left-[20%] absolute '>
+                            <img src={Branch10} className="object-cover h-[28vh]" alt="" />
+                        </span>
+                        <span className='h-full w-fit branch-11 left-[30%] absolute '>
+                            <img src={Branch11} className="object-cover h-[10vh]" alt="" />
+                        </span>
+
+                    </div>
+                    <img src={homeScenery} className='h-full w-full object-contain  ' alt="" />
                 </div>
-                <img src={homeScenery} className='h-full w-full object-contain  ' alt="" />
-            </div>
-            <img src={homeSceneryBG} className='h-full w-full object-cover z-[-100]  absolute ' alt="" />
+                <img src={homeSceneryBG} className='h-full w-full object-cover z-[-100]  absolute ' alt="" />
 
-            {/*rock and Board */}
-            <div className='w-80 h-[30rem] bottom-24 z-0 absolute'>
-                <img src={BigBoard} className='scale-[0.7] absolute right-[-1rem] rotate-6 bottom-[-9.5rem]' alt="" />
-                <span className='font-pixel md:text-3xl right-6 rotate-6 top-[-1rem] p-4 absolute w-fit h-fit '>
+                {/*rock and Board */}
+                <div className='w-80 h-[30rem] bottom-24 z-0 absolute'>
+                    <img src={BigBoard} className='scale-[0.7] absolute right-[-1rem] rotate-6 bottom-[-9.5rem]' alt="" />
+                    <span className='font-pixel md:text-3xl right-6 rotate-6 top-[-1rem] p-4 absolute w-fit h-fit '>
 
-                <h1 className='text-amber-800' >CHATRETRO</h1>
-                <h1 className='text-amber-800'>LET'S CHAT</h1>
-                </span>
-                <input value={userGuestName} onChange={(e) => {setUserGuestName(e.target.value)}} type="text" className='absolute z-[1000] top-[30%] rotate-[-12deg] h-20 w-48 left-[-1rem] text-amber-800 md:text-3xl font-pixel bg-none appearance-none outline-none ring-0 focus:ring-0 ' placeholder="Guest Name" />
-                <img src={SmallBoard} className='scale-[0.7] absolute left-[-4rem] rotate-[-12deg] ' alt="" />
-                
-                <img src={rock} className='scale-[0.6] absolute bottom-[-4rem]' alt="" />
-            </div>
+                        <h1 className='text-amber-800' >CHATRETRO</h1>
+                        <h1 className='text-amber-800'>LET'S CHAT</h1>
+                    </span>
+                    <input value={userGuestName} onChange={(e) => { setUserGuestName(e.target.value) }} type="text" className='absolute z-[1000] top-[30%] rotate-[-12deg] h-20 w-48 left-[-1rem] text-amber-800 md:text-3xl font-pixel bg-none appearance-none outline-none ring-0 focus:ring-0 ' placeholder="Guest Name" />
+                    <img src={SmallBoard} className='scale-[0.7] absolute left-[-4rem] rotate-[-12deg] ' alt="" />
+
+                    <img src={rock} className='scale-[0.6] absolute bottom-[-4rem]' alt="" />
+                </div>
 
 
-            <button onClick={handleChatNowEvent} className='absolute p-4 px-8 font-pixel border-2 cursor-pointer hover:bg-green-600 bg-black  hover:opacity-100 hover:border-green-600 hover:text-white border-green-500 right-32 bottom-16 md:text-3xl md:rounded-2xl text-green-500'>START CHAT</button>
+                <button onClick={handleChatNowEvent} className='absolute p-4 px-8 font-pixel border-2 cursor-pointer hover:bg-green-600 bg-black  hover:opacity-100 hover:border-green-600 hover:text-white border-green-500 right-32 bottom-16 md:text-3xl md:rounded-2xl text-green-500'>START CHAT</button>
 
-            {/* <div className='h-[90vh] w-full flex justify-center items-center '>
+                {/* <div className='h-[90vh] w-full flex justify-center items-center '>
                 <div className='h-fit w-fit p-2 md:p-4 lg:p-8 gap-4 flex flex-col  border-2 border-black rounded-sm md:rounded-lg '>
 
                     <p>Guest Name : </p>
@@ -257,7 +319,8 @@ const DesktopHome = () => {
                 </div>
 
             </div> */}
-        </div>
+            </div>
+        </div >
     )
 }
 
