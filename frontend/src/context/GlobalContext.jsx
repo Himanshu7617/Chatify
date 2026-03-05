@@ -13,8 +13,9 @@ const GlobalContext = ( {children} ) => {
   const [chatMultipleUserID, setChatMultipleUserID] = useState('');
   const [chatMultipleAllRooms, setChatMultipleAllRooms] = useState([]);
   const TOTAL_IMAGES_FOR_HOME_PAGE = 16;
+  const TOTAL_IMAGES_FOR_DASHBOARD_PAGE = 2;
 
-  const contextValues = {TOTAL_IMAGES_FOR_HOME_PAGE, theme, setTheme, chatRandomUserID, setChatRandomUserID,chatMultipleAllRooms,setChatMultipleAllRooms, userGuestName, setUserGuestName, chatMultipleUserID, setChatMultipleUserID, }
+  const contextValues = {TOTAL_IMAGES_FOR_HOME_PAGE, TOTAL_IMAGES_FOR_DASHBOARD_PAGE, theme, setTheme, chatRandomUserID, setChatRandomUserID,chatMultipleAllRooms,setChatMultipleAllRooms, userGuestName, setUserGuestName, chatMultipleUserID, setChatMultipleUserID, }
   return (
     <globalContext.Provider value={ contextValues}>
       {children}
