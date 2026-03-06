@@ -16,7 +16,8 @@ const io = new Server(server, {
 
             "https://chatify-pi-red.vercel.app/", 
             "https://www.chatretro.tech/"
-        ]
+        ], 
+        methods: ["GET", "POST"]
     } 
 });
 
